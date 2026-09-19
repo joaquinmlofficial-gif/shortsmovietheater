@@ -1,0 +1,186 @@
+* {
+    margin: 0;
+    padding: 0;
+} 
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #6E1E1F;
+  overflow-x: hidden;
+}
+
+.wrapper-container {
+  width: 100%;           /* Full width on small screens */
+  max-width: 1200px;     /* Caps the size on large desktops */
+  margin: 0 auto;        /* Perfectly centers the div horizontally */
+  box-sizing: border-box;
+}
+
+img.full-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.oi-regular {
+  font-family: "Oi", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.title{
+  color: #FDABFF;
+  font-size: xx-large;
+  padding-top: 50px;
+  grid-column: span 2;
+}
+
+.parent {
+  display: grid;
+  /* grid-template-columns: auto auto auto auto; */
+  grid-template-columns: 1fr 1fr; /* Responsive columns */
+  grid-template-rows: 1fr 5fr 2fr 2fr; 
+  justify-content: center;   /* Centers horizontally */
+  align-items: center;       /* Centers vertically */
+  height: 100vh;             /* Gives the container full viewport height */
+  z-index: 5;
+}
+
+.side-curtains {
+  z-index: 7;
+}
+
+.static-curtains {
+  z-index: 1;
+}
+
+@import url('https://googleapis.com');
+h2{
+  font-family: 'Shrikhand', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+}
+
+.circle{
+  opacity: 30%;
+  width: 300px;
+  height: 300px;
+  text-align: center;
+  background-color: #FFED7D;
+  border-radius: 50%;
+  position: fixed;           /* Locks it relative to the screen */
+  top: 50%;                  /* Pushes top edge to the middle */
+  left: 50%;                 /* Pushes left edge to the middle */
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+
+/* Hover state */
+.circle:hover {
+  opacity: 0%;
+  cursor: pointer;
+}
+
+.circle-clicked{
+  opacity: 0%;
+  cursor: auto;
+}
+
+.beam_light{
+    opacity: 75%;
+    z-index: 8;
+}
+
+.back_curtains {
+  z-index: 3;
+}
+
+/* Logo */
+img.circle-crop {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover; /* Prevents the image from stretching */
+  position: fixed;           /* Locks it relative to the screen */
+  top: 50%;                  /* Pushes top edge to the middle */
+  left: 50%;                 /* Pushes left edge to the middle */
+  transform: translate(-50%, -50%);
+  z-index: 9;
+}
+
+/* The styles applied ONLY when the image is clicked */
+.animate-down-up {
+ animation: bounceAndExit 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Keyframes that push the image down 40px, then bring it back */
+@keyframes bounceAndExit {
+    0% {
+        transform: translate(-150px, -140px);
+    }
+    30% {
+        transform: translate(-150px, -120px);; /* Adjust distance here */
+    }
+    100% {
+        transform:translate(-150px, -120vh);
+    }
+
+  }
+
+  /* fade out spotlight triangle */
+.fade_out {
+ opacity: 0%;
+ /* transform:translate(-150px, -120vh); */
+  transition: opacity 1s ease;
+}
+
+/* move right curtain */
+.move_right {
+  transform: translateX(100vw);
+/* transition makes the movement smooth instead of an instant jump */
+  transition: transform 2s ease; 
+}
+/* move left curtain */
+.move_left{
+  transform: translateX(-100vw);
+/* transition makes the movement smooth instead of an instant jump */
+  transition: transform 2s ease; 
+}
+
+.button{
+  z-index: 5;
+}
+
+.full-width{
+  grid-column: span 2;
+}
+
+.left_link{
+    /* grid-column: 1 / 2; */
+    text-align: left;
+    transform: scaleX(-1);
+}
+
+.right_link{
+    /* grid-column: 3 / 4; */
+    text-align: right;
+}
+
+.disco{
+  /* position: fixed;           Locks it relative to the screen */
+  /* top: 50%;                  /* Pushes top edge to the middle */
+  /* left: 50%;                 Pushes left edge to the middle */ 
+  /* transform: translate(-50%, -50%); */
+  display: block;        /* Removes unwanted inline tracking space at the bottom */
+  width: 100%;           /* Forces image to match cell width */
+  height: 100%;          /* Forces image to match cell height */
+  object-fit: contain;     /* Crops/scales image nicely without distortion */
+  object-position: center; /* Centers the image inside the crop area */
+}
