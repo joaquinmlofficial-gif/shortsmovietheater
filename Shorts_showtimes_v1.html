@@ -27,16 +27,21 @@
       </div>
       <div class="showtime-parent">
         <img src="Assets/showtimes_board.png" class="showtimes">
+        <div>
+          <p id="now_playing">Loading now playing CSV data...</p>
+        </div>
+
         <div class="times">
-          <p id="times">Loading CSV data...</p>
+          <p id="times">Loading times CSV data...</p>
         </div>
+
         <div class="titles">
-          <p id="titles">Loading CSV data...</p>
+          <p id="titles">Loading titles CSV data...</p>
         </div>
+
         <div class="lengths">
-          <p id="lengths" class="length">Loading CSV data...</p>
+          <p id="lengths" class="length">Loading lengths CSV data...</p>
         </div>
-        
 
         <script>
             // Reads 'data.csv' automatically if it sits in the same folder as this HTML file
@@ -56,9 +61,15 @@
                   console.log(result)
                   console.log(result[1])
 
+                  const now_playing = result[1][1]
+                  console.log(result[1])
+
                   const times = result.map(rows => rows.time); 
                   const titles = result.map(rows => rows.title); 
                   const lengths = result.map(rows => rows.lengths); 
+
+                  document.getElementById('now_playing').innerText = now_playing;
+
                   document.getElementById('times').innerText = times.join('');
                   document.getElementById('titles').innerText = titles.join('\n');
                   document.getElementById('lengths').innerText = lengths.join('\n');
