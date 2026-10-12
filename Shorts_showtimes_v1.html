@@ -52,7 +52,7 @@
             let cur_index = null;
 
             // Reads 'data.csv' automatically if it sits in the same folder as this HTML file
-            fetch('shorts_schedule.csv')
+            fetch('./shorts_schedule.csv')
                 .then(response => response.text())
                 .then(data => {
                   const lines = data.trim().split("\r");
