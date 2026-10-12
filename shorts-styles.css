@@ -209,6 +209,9 @@ img.circle-crop {
 .insta:hover{
   opacity: 50%;
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .button{
   z-index: 5;
@@ -369,5 +372,8 @@ span#titles{
 
 p {
   white-space: pre-line; /* Collapses extra spaces, but keeps your newlines */
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
