@@ -133,12 +133,23 @@ text-overflow: ellipsis;
 #now_playing{
  position: absolute;
  white-space: nowrap;
- transform: translate(320%, 900%);
+ transform: translate(18vw, 50vh);
+ color:white;
+ font-size: 450%; 
+line-height: 1.457; 
+text-overflow: ellipsis;
+}
+
+#starts_in{
+ position: absolute;
+ white-space: nowrap;
+ transform: translate(53vw, 53vh);
  color:white;
  font-size: 400%; 
 line-height: 1.457; 
 text-overflow: ellipsis;
 }
+
 
 #lengths{
   white-space: pre-line;
