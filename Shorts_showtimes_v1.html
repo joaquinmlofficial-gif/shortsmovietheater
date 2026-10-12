@@ -3,7 +3,7 @@
   <head>
     <title>Showtimes</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <link rel="stylesheet" href="shorts-styles.css">
+    <link rel="stylesheet" href="showtimes_styles.css">
     <script src="shorts-script.js" defer></script>
     <link rel="icon" type="image/jpeg" href="Assets/shorts_logo.jpg">
 
@@ -14,9 +14,124 @@
   </head>
 <body>
  <div class="wrapper-container">
+    <div class="header">
+      <div></div>
+      <div style="grid-column:span 3;">      
+        <img src="Assets/shorts_wordmark.png" class="wordmark">
+      </div>
+      <img src="Assets/short_disco.png" class="hamburger">
+    </div>
     <div class="parent">
       <div class="title">
         <h2 class="oi-regular">Showtimes</h2>
+      </div>
+      <div class="showtime-parent">
+        <img src="Assets/showtimes_board.png" class="showtimes">
+        <div>
+          <p id="now_playing">Loading now playing CSV data...</p>
+        </div>
+
+        <div>
+          <p id="starts_in">Loading starts in CSV data...</p>
+        </div>
+
+        <div class="times">
+          <p id="times">Loading times CSV data...</p>
+        </div>
+
+        <div class="titles">
+          <p id="titles">Loading titles CSV data...</p>
+        </div>
+
+        <div class="lengths">
+          <p id="lengths" class="length">Loading lengths CSV data...</p>
+        </div>
+
+        <script>
+            let globalSchedule = null;
+            let cur_index = null;
+
+            // Reads 'data.csv' automatically if it sits in the same folder as this HTML file
+            fetch('shorts_schedule.csv')
+                .then(response => response.text())
+                .then(data => {
+                  const lines = data.trim().split("\r");
+                  const headers = lines[0].split(",");
+
+                  const result = lines.slice(1).map(row => {
+                    const values = row.split(",");
+                    return headers.reduce((obj, header, index) => {
+                      obj[header] = values[index];
+                      return obj;
+                    }, {});
+                  });
+                  globalSchedule = result; 
+
+                  updateNowPlaying();
+
+                  const times = result.map(rows => rows.time); 
+                  const titles = result.map(rows => rows.title); 
+                  const lengths = result.map(rows => rows.lengths); 
+
+                  document.getElementById('times').innerText = times.join('');
+                  document.getElementById('titles').innerText = titles.join('\n');
+                  document.getElementById('lengths').innerText = lengths.join('\n');
+                })
+                .catch(error => {
+                    document.getElementById('times').textContent = "Error loading CSV.";
+                    console.error(error);
+                });
+
+            async function updateNowPlaying() {
+              console.log("Checking the time")
+              if (!globalSchedule) {
+                  console.log("Data hasn't loaded yet. Please upload a file first.");
+                  return;
+              }
+              const cur_time = new Date();
+
+              const hour = cur_time.getHours();
+              const min = cur_time.getMinutes();
+              console.log(cur_time.toLocaleTimeString()); 
+
+              for (let i = 0; i < globalSchedule.length; i++) {
+                const check_hour = globalSchedule[i]['time'].split(':')[0];
+                const check_min = globalSchedule[i]['time'].split(':')[1];
+                console.log(parseInt(check_hour, 10) >= hour)
+                console.log(parseInt(check_min, 10) > min)
+                if (parseInt(check_hour, 10) >= hour && parseInt(check_min, 10) > min){
+                  cur_index = i;
+                  break;
+                }
+                if (cur_index===null){
+                  cur_index = 0
+                }
+                console.log("Current film is " + globalSchedule[cur_index]['title']);
+              }
+
+              const starts_hour = globalSchedule[cur_index]['time'].split(':')[0];
+              const starts_min = globalSchedule[cur_index]['time'].split(':')[1];
+
+              const now_playing = globalSchedule[cur_index]['title'];
+              //const starts_in = globalSchedule[cur_index]['time'];
+              
+              document.getElementById('now_playing').innerText = now_playing;
+
+              const start_in = starts_min - min;
+              if (starts_hour < hour && start_in < 0){
+                console.log(starts_hour)
+                console.log(hour)
+                const start_hour = parseInt(starts_hour,10) + 24 - hour;
+                document.getElementById('starts_in').innerText = `${start_hour}:`;
+              }
+              else {
+                document.getElementById('starts_in').innerText = `:${String(start_in).padStart(2, '0')}`;
+              }
+
+            }
+            // Check and update the greeting every 60 seconds (60000 milliseconds)
+            setInterval(updateNowPlaying, 30000);
+        </script>
       </div>
     </div>
     

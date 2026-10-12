@@ -153,8 +153,51 @@ img.circle-crop {
   grid-template-rows: 1fr 4fr 2fr 2fr; 
   justify-content: center;   /* Centers horizontally */
   align-items: center;       /* Centers vertically */
-  height: 100vh;             /* Gives the container full viewport height */
+  height: 80vh;             /* Gives the container 80% of viewport height */
   z-index: 5;
+}
+
+.footer {
+  display: grid;
+  /* grid-template-columns: auto auto auto auto; */
+  grid-template-columns: repeat(5, 1fr); 
+  grid-template-rows: 1fr; 
+  justify-content: center;   /* Centers horizontally */
+  align-items: center;       /* Centers vertically */
+  height: 20vh;             /* Gives the container 20% viewport height */
+  z-index: 5;
+  background-color: #470001;
+  color: #FDABFF;
+}
+
+.header{
+  display: grid;
+  /* grid-template-columns: auto auto auto auto; */
+  grid-template-columns: repeat(5, 1fr); 
+}
+
+.wordmark{
+  text-align: center;
+  width: 50%;
+  object-fit: contain;     /* Crops/scales image nicely without distortion */
+  object-position: center; /* Centers the image inside the crop area */
+    grid-column: span 3;
+
+}
+
+.hamburger{
+  text-align: right;
+  width: 100%;
+  object-fit: contain;     /* Crops/scales image nicely without distortion */
+  object-position: center; /* Centers the image inside the crop area */
+}
+
+.insta{
+  text-align: right;
+}
+
+.insta:hover{
+  opacity: 50%;
 }
 
 .button{
@@ -284,3 +327,50 @@ img.circle-crop {
   opacity: 100%;
 }
 
+/* SHOWTIMEs */
+
+.showtime-parent {
+  position: relative;
+  color: white;
+  display: grid;
+  /* grid-template-columns: auto auto auto auto; */
+  grid-template-columns: repeat(3, 1fr); 
+}
+
+div.showtime-parent *{
+  position: absolute;
+}
+
+#times{
+  white-space: pre-line;
+ position: absolute;
+ transform: translate(-50%, -50%);
+  color:white;
+ 
+}
+
+span#titles{
+ position: absolute;
+ white-space: pre-line;
+ transform: translate(-50%, -50%);
+  color:white;
+ 
+}
+
+.titles{
+ position: absolute;
+ white-space: pre-line;
+ transform: translate(-50%, -50%);
+  color:white;
+ 
+}
+.length{
+  white-space: pre-line;
+ position: absolute;
+ transform: translate(-50%, -50%);
+ color:white;
+}
+
+p {
+  white-space: pre-line; /* Collapses extra spaces, but keeps your newlines */
+}
