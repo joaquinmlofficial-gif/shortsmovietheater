@@ -65,12 +65,12 @@
                 .then(data => {
                   console.log("CSV Data received:", data); // Check what is actually returning
                   const lines = data.trim().split("\n");
-                  const headers = lines[0].split(",");
+                  const headers = lines[0].replace(/\r/g, "").split(",");
 
                   const result = lines.slice(1).map(row => {
                     const values = row.split(",");
                     return headers.reduce((obj, header, index) => {
-                      obj[header] = values[index];
+                      obj[header] = values[index].replace(/\r/g, "");
                       return obj;
                     }, {});
                   });
@@ -80,11 +80,11 @@
 
                   const times = result.map(rows => rows.time); 
                   const titles = result.map(rows => rows.title); 
-                  const lengths = result.map(rows => rows.lengths); 
+                  const length_s = result.map(rows => rows.lengths); 
 
-                  document.getElementById('times').innerText = times.join('');
+                  document.getElementById('times').innerText = times.join('\n');
                   document.getElementById('titles').innerText = titles.join('\n');
-                  document.getElementById('lengths').innerText = lengths.join('\n');
+                  document.getElementById('lengths').innerText = length_s.join('\n');
                 })
                 .catch(error => {
                     document.getElementById('times').textContent = "Error loading CSV.";
