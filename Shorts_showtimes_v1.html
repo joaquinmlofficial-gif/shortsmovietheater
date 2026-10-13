@@ -64,7 +64,7 @@
                 })
                 .then(data => {
                   console.log("CSV Data received:", data); // Check what is actually returning
-                  const lines = data.trim().split("\r");
+                  const lines = data.trim().split("\n");
                   const headers = lines[0].split(",");
 
                   const result = lines.slice(1).map(row => {
