@@ -49,14 +49,38 @@
 
         <script>
             let globalSchedule = null;
-            let cur_index = null;
+            let cur_index = 0;
 
             // Reads 'data.csv' automatically if it sits in the same folder as this HTML file
             fetch('shorts_schedule.csv')
                 .then(response => response.text())
                 .then(data => {
+<<<<<<< Updated upstream
                   const lines = data.trim().split("\r");
                   const headers = lines[0].split(",");
+=======
+                  console.log("CSV Data received:", data); // Check what is actually returning
+                  function parseAndCleanCSV(csvText) {
+                    // Split text into individual rows
+                    const rows = csvText.split("\n");
+
+                    const cleanedRows = rows.filter(row => {
+                        // Split the row into columns
+                        const columns = row.split(',');
+                        
+                        // Check if at least one column has actual content (ignoring spaces)
+                        const hasContent = columns.some(col => col.trim() !== '');
+                        
+                        return hasContent;
+                      });
+
+                    return cleanedRows.map(row => row.split(','));
+                  }
+                  const cleaned_data = parseAndCleanCSV(data).join('\n');
+
+                  const lines = cleaned_data.trim().split("\n");
+                  const headers = lines[0].replace(/\r/g, "").split(",");
+>>>>>>> Stashed changes
 
                   const result = lines.slice(1).map(row => {
                     const values = row.split(",");
@@ -65,7 +89,10 @@
                       return obj;
                     }, {});
                   });
+
+                  
                   globalSchedule = result; 
+
 
                   updateNowPlaying();
 
@@ -90,22 +117,52 @@
               }
               const cur_time = new Date();
 
-              const hour = cur_time.getHours();
-              const min = cur_time.getMinutes();
+              let time_state = "";
+              //const hour = cur_time.getHours();
+              //const min = cur_time.getMinutes();
               console.log(cur_time.toLocaleTimeString()); 
+              let cur_time_formatted = cur_time.toLocaleTimeString('en-GB', {
+                                                                                hour: '2-digit',
+                                                                                minute: '2-digit',
+                                                                                second: '2-digit',
+                                                                                hour12: false
+                                                                              });
+              function timeToMinutes(timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                return (hours * 60) + minutes;
+              }
+
+              function subtractTimes(time1, time2) {
+                return timeToMinutes(time1) - timeToMinutes(time2);
+              }
+
+              if (globalSchedule[globalSchedule.length - 1]['time'].split(' ')[0] < cur_time_formatted && cur_time_formatted < "24:00:00"){
+                // after closing but before midnight
+                time_state = "after_closing";
+              } else if (subtractTimes(globalSchedule[0]['time'].split(' ')[0], "01:00:00") > subtractTimes(cur_time_formatted, "00:00:00") && cur_time_formatted >= "00:00:00"){
+                // after midnight but before one hour before opening
+                time_state = "before_opening";
+                
+              }
+              else {
+                time_state = "during_block";
+              }
+              console.log("last block time");
+              console.log(subtractTimes(globalSchedule[0]['time'].split(' ')[0], "01:00:00"));
+              console.log(cur_time_formatted);
+              console.log(subtractTimes(cur_time_formatted, "00:00:00"));
 
               for (let i = 0; i < globalSchedule.length; i++) {
                 const check_hour = globalSchedule[i]['time'].split(':')[0];
                 const check_min = globalSchedule[i]['time'].split(':')[1];
-                console.log(parseInt(check_hour, 10) >= hour)
-                console.log(parseInt(check_min, 10) > min)
-                if (parseInt(check_hour, 10) >= hour && parseInt(check_min, 10) > min){
+
+                if (globalSchedule[i]['time'].split(' ')[0] >= cur_time_formatted){
                   cur_index = i;
                   break;
                 }
-                if (cur_index===null){
-                  cur_index = 0
-                }
+                //if (cur_index===null){
+                  //cur_index = 0
+                //}
                 console.log("Current film is " + globalSchedule[cur_index]['title']);
               }
 
@@ -113,19 +170,27 @@
               const starts_min = globalSchedule[cur_index]['time'].split(':')[1];
 
               const now_playing = globalSchedule[cur_index]['title'];
+              const cur_movie_time = globalSchedule[cur_index]['time'].split(' ')[0];
+
               //const starts_in = globalSchedule[cur_index]['time'];
               
               document.getElementById('now_playing').innerText = now_playing;
 
-              const start_in = starts_min - min;
-              if (starts_hour < hour && start_in < 0){
-                console.log(starts_hour)
-                console.log(hour)
-                const start_hour = parseInt(starts_hour,10) + 24 - hour;
-                document.getElementById('starts_in').innerText = `${start_hour}:`;
+              //const start_in = starts_min - min;
+              console.log(cur_movie_time);
+              console.log(cur_time_formatted);
+              console.log(subtractTimes(cur_movie_time, cur_time_formatted));
+              console.log(time_state);
+              if (time_state == "before_opening"){
+                const start_hour = String(parseInt(subtractTimes(cur_movie_time, cur_time_formatted)/60,10));
+                document.getElementById('starts_in').innerText = `${start_hour.padStart(2, '0')}:`;
+              } else if (time_state == "after_closing") {
+                // if we are after closing but before midnight
+                const start_hour = String(parseInt((subtractTimes(cur_movie_time, "00:00:00") + subtractTimes("24:00:00", cur_time_formatted))/60,10));
+                document.getElementById('starts_in').innerText = `${start_hour.padStart(2, '0')}:`;
               }
               else {
-                document.getElementById('starts_in').innerText = `:${String(start_in).padStart(2, '0')}`;
+                document.getElementById('starts_in').innerText = `:${String(subtractTimes(cur_movie_time, cur_time_formatted)).padStart(2, '0')}`;
               }
 
             }
@@ -136,5 +201,24 @@
     </div>
     
   </div>
+
+  <div class="footer" style="margin-top: 100%;"> 
+      <div></div>
+      <div>
+          <p>Shorts Movie Theater <br> <a href="https://maps.app.goo.gl/o5bwmLp3ZGhjHJKy8">236 Troutman St <br>Brooklyn, NY 11237 </a></p>
+      </div>
+      <div style="text-align: center;">
+          <p>Monday-Thursday: 9:00am - 10:00pm <br> Friday & Saturday: 10:00am-12:00pm <br> Sunday: 10:00am-10:00pm</p>
+      </div>
+      <div class="insta">
+        <a href="http://instagram.com/shortsmovietheater">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+          <path fill="#FDABFF" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+        </a>
+      </div>
+      <div></div>
+
+    </div>
 </body>
 </html>
