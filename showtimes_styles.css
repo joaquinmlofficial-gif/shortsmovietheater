@@ -89,6 +89,17 @@ img.full-page {
   z-index: 5;
 }
 
+.menu-header{
+  display: grid;
+  /* grid-template-columns: auto auto auto auto; */
+  grid-template-columns: repeat(5, 1fr); 
+  grid-template-rows: 1fr; 
+  justify-content: center;   /* Centers horizontally */
+  align-items: center;       /* Centers vertically */
+  text-align: center;
+  padding-top:5%;
+}
+
 
 /* SHOWTIMEs */
 
